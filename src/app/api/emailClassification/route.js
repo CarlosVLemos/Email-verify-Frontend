@@ -1,12 +1,14 @@
 import axiosInstance from '../axiosInstance';
 
-export const classifyEmail = async (emailText, senderEmail, senderName) => {
+export const classifyEmail = async (emailText, senderEmail = null, senderName = null) => {
   try {
-    const response = await axiosInstance.post('/api/classifier/classify/', {
-      email_text: emailText,
-      sender_email: senderEmail,
-      sender_name: senderName,
-    });
+    const payload = { email_text: emailText };
+
+    // Adiciona campos opcionais apenas se forem fornecidos
+    if (senderEmail) payload.sender_email = senderEmail;
+    if (senderName) payload.sender_name = senderName;
+
+    const response = await axiosInstance.post('/api/classifier/classify/', payload);
     return response.data;
   } catch (error) {
     console.error('Error classifying email:', error);
