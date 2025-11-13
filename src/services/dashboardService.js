@@ -1,15 +1,6 @@
-import axiosInstance from '../axiosInstance';
+import axiosInstance from '@/app/api/axiosInstance';
 
-export const checkApiHealth = async () => {
-  try {
-    const response = await axiosInstance.get('/api/classifier/health/');
-    return response.data;
-  } catch (error) {
-    console.error('Error checking API health:', error);
-    throw error;
-  }
-};
-
+// Visão geral do dashboard
 export const getDashboardOverview = async (days = 30) => {
   try {
     const response = await axiosInstance.get(`/api/analytics/dashboard/overview/?days=${days}`);
@@ -20,6 +11,7 @@ export const getDashboardOverview = async (days = 30) => {
   }
 };
 
+// Tendências ao longo do tempo
 export const getDashboardTrends = async (days = 30, granularity = 'daily') => {
   try {
     const response = await axiosInstance.get(`/api/analytics/dashboard/trends/?days=${days}&granularity=${granularity}`);
@@ -30,6 +22,7 @@ export const getDashboardTrends = async (days = 30, granularity = 'daily') => {
   }
 };
 
+// Distribuição de categorias
 export const getDashboardCategories = async (days = 30) => {
   try {
     const response = await axiosInstance.get(`/api/analytics/dashboard/categories/?days=${days}`);
@@ -40,6 +33,7 @@ export const getDashboardCategories = async (days = 30) => {
   }
 };
 
+// Análise de remetentes
 export const getDashboardSenders = async (limit = 10, minEmails = 1) => {
   try {
     const response = await axiosInstance.get(`/api/analytics/dashboard/senders/?limit=${limit}&min_emails=${minEmails}`);
@@ -50,6 +44,7 @@ export const getDashboardSenders = async (limit = 10, minEmails = 1) => {
   }
 };
 
+// Insights de palavras-chave
 export const getDashboardKeywords = async (days = 30, limit = 10) => {
   try {
     const response = await axiosInstance.get(`/api/analytics/dashboard/keywords/?days=${days}&limit=${limit}`);
@@ -60,6 +55,7 @@ export const getDashboardKeywords = async (days = 30, limit = 10) => {
   }
 };
 
+// Métricas de performance
 export const getDashboardPerformance = async (days = 30) => {
   try {
     const response = await axiosInstance.get(`/api/analytics/dashboard/performance/?days=${days}`);
@@ -70,6 +66,7 @@ export const getDashboardPerformance = async (days = 30) => {
   }
 };
 
+// Lista de emails processados
 export const getEmailsList = async (days = 30, category = null, page = 1, perPage = 20) => {
   try {
     let url = `/api/analytics/emails/?days=${days}&page=${page}&per_page=${perPage}`;

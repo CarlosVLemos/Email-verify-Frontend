@@ -1,26 +1,30 @@
 "use client";
 
-import FormBatchUpload from '../components/features/forms/FormBatchUpload';
 import FormTextSubmit from '../components/features/forms/FormTextSubmit';
+import FormBatchUpload from '../components/features/forms/FormBatchUpload';
 import ResultList from './results/_components/ResultList';
 import { useState } from 'react';
 
 export default function Home() {
   const [results, setResults] = useState([]); // Array de resultados
+  const [emailTexts, setEmailTexts] = useState([]); // Array de textos dos emails
+  const [activeTab, setActiveTab] = useState('single'); // 'single' ou 'batch'
 
-  const handleSingleResult = (result) => {
+  const handleSingleResult = (result, emailText) => {
     // Adiciona um único resultado ao array
     setResults([result]);
+    setEmailTexts([emailText]);
   };
 
-  const handleBatchResults = (batchResults) => {
+  const handleBatchResults = (batchResults, batchTexts = []) => {
     // Para processamento em lote
     setResults(batchResults);
+    setEmailTexts(batchTexts);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -31,30 +35,73 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Forms Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-          <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
-            <div className="flex items-center mb-4">
-              <div className="bg-indigo-100 p-3 rounded-lg">
-                <svg className="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+        {/* Tabs Navigation */}
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden mb-8">
+          <div className="flex border-b border-gray-200">
+            <button
+              onClick={() => setActiveTab('single')}
+              className={`flex-1 py-4 px-6 text-center font-semibold transition-all duration-200 ${
+                activeTab === 'single'
+                  ? 'bg-indigo-600 text-white border-b-4 border-indigo-700'
+                  : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              <div className="flex items-center justify-center">
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
+                Enviar Email Único
               </div>
-              <h2 className="text-2xl font-bold text-gray-800 ml-3">Análise de Texto</h2>
-            </div>
-            <FormTextSubmit onSubmit={handleSingleResult} />
+              <p className="text-xs mt-1 opacity-75">Analise um email por vez (texto ou arquivo)</p>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('batch')}
+              className={`flex-1 py-4 px-6 text-center font-semibold transition-all duration-200 ${
+                activeTab === 'batch'
+                  ? 'bg-purple-600 text-white border-b-4 border-purple-700'
+                  : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              <div className="flex items-center justify-center">
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+                Enviar em Lote
+              </div>
+              <p className="text-xs mt-1 opacity-75">Analise múltiplos emails de uma vez (arquivo com vários emails)</p>
+            </button>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
-            <div className="flex items-center mb-4">
-              <div className="bg-purple-100 p-3 rounded-lg">
-                <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                </svg>
+          {/* Tab Content */}
+          <div className="p-8">
+            {activeTab === 'single' && (
+              <div className="animate-fadeIn">
+                <div className="mb-6">
+                  <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                    Análise de Email Único
+                  </h2>
+                  <p className="text-gray-600">
+                    Envie um email individual para análise. Você pode digitar o texto diretamente ou fazer upload de um arquivo (.txt, .pdf, .docx).
+                  </p>
+                </div>
+                <FormTextSubmit onSubmit={handleSingleResult} />
               </div>
-              <h2 className="text-2xl font-bold text-gray-800 ml-3">Upload em Lote</h2>
-            </div>
-            <FormBatchUpload onSubmit={handleBatchResults} />
+            )}
+
+            {activeTab === 'batch' && (
+              <div className="animate-fadeIn">
+                <div className="mb-6">
+                  <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                    Processamento em Lote
+                  </h2>
+                  <p className="text-gray-600">
+                    Envie um arquivo contendo múltiplos emails para análise simultânea. Formatos aceitos: .txt, .csv, .json (até 50 emails).
+                  </p>
+                </div>
+                <FormBatchUpload onSubmit={handleBatchResults} />
+              </div>
+            )}
           </div>
         </div>
 
@@ -67,15 +114,24 @@ export default function Home() {
                   ✓
                 </span>
                 Resultados da Análise
+                <span className="ml-3 text-lg text-gray-500 font-normal">
+                  ({results.length} {results.length === 1 ? 'email' : 'emails'})
+                </span>
               </h2>
               <button
-                onClick={() => setResults([])}
-                className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition-colors duration-200 font-medium"
+                onClick={() => {
+                  setResults([]);
+                  setEmailTexts([]);
+                }}
+                className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition-colors duration-200 font-medium flex items-center"
               >
+                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
                 Limpar Resultados
               </button>
             </div>
-            <ResultList results={results} />
+            <ResultList results={results} emailTexts={emailTexts} />
           </div>
         )}
       </div>

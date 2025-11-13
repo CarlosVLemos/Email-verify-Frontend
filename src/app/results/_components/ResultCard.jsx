@@ -1,5 +1,12 @@
-const ResultCard = ({ result }) => {
+import { useState } from 'react';
+import { summarizeEmail } from '../../../app/api/emailClassification/route';
+
+const ResultCard = ({ result, emailText }) => {
   if (!result) return null;
+
+  const [summary, setSummary] = useState(null);
+  const [loadingSummary, setLoadingSummary] = useState(false);
+  const [summaryError, setSummaryError] = useState('');
 
   const {
     topic,
@@ -32,6 +39,63 @@ const ResultCard = ({ result }) => {
     'Alta': { color: 'bg-red-100 text-red-700 border-red-300', icon: '🔴' },
     'Média': { color: 'bg-yellow-100 text-yellow-700 border-yellow-300', icon: '🟡' },
     'Baixa': { color: 'bg-green-100 text-green-700 border-green-300', icon: '🟢' },
+  };
+
+  const handleGenerateSummary = async () => {
+    if (!emailText) {
+      setSummaryError('Texto do email não disponível para resumo');
+      return;
+    }
+
+    // Validação de tamanho mínimo para texto
+    if (typeof emailText === 'string' && emailText.length < 100) {
+      setSummaryError('O texto deve ter pelo menos 100 caracteres para gerar um resumo útil.');
+      return;
+    }
+
+    setLoadingSummary(true);
+    setSummaryError('');
+
+    try {
+      let summaryData;
+      
+      // Verifica se emailText é um arquivo (File object) ou string
+      if (emailText instanceof File) {
+        // É um arquivo - cria FormData
+        const formData = new FormData();
+        formData.append('file', emailText);
+        summaryData = await summarizeEmail(formData, 3);
+      } else {
+        // É texto normal
+        summaryData = await summarizeEmail(emailText, 3);
+      }
+      
+      setSummary(summaryData);
+    } catch (error) {
+      console.error('Erro ao gerar resumo:', error);
+      
+      // Mensagem de erro mais detalhada
+      let errorMessage = 'Erro ao gerar resumo. ';
+      
+      if (error.response?.status === 400) {
+        const fieldErrors = error.response?.data?.field_errors;
+        
+        // Verifica se há erro específico de tamanho mínimo
+        if (fieldErrors?.email_text) {
+          errorMessage = fieldErrors.email_text[0] || 'Requisição inválida.';
+        } else {
+          errorMessage += 'Requisição inválida. Verifique o formato dos dados.';
+        }
+      } else if (error.response?.status === 500) {
+        errorMessage += 'Erro no servidor. Tente novamente mais tarde.';
+      } else {
+        errorMessage += 'Tente novamente.';
+      }
+      
+      setSummaryError(errorMessage);
+    } finally {
+      setLoadingSummary(false);
+    }
   };
 
   return (
@@ -124,6 +188,123 @@ const ResultCard = ({ result }) => {
             <p className="text-sm text-gray-700 bg-purple-50 p-4 rounded-xl border border-purple-100 leading-relaxed">
               {suggested_response}
             </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Resumo do Email */}
+      <div className="px-6 py-5 bg-gradient-to-r from-cyan-50 to-blue-50 border-t border-cyan-100">
+        <div className="flex items-start">
+          <div className="bg-cyan-100 p-2 rounded-lg mr-3 mt-1">
+            <svg className="w-5 h-5 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-sm text-cyan-600 uppercase tracking-wide font-semibold">
+                📄 Resumo Executivo
+              </p>
+              {!summary && (
+                <button
+                  onClick={handleGenerateSummary}
+                  disabled={loadingSummary || (typeof emailText === 'string' && emailText.length < 100)}
+                  className="px-4 py-1.5 bg-cyan-600 hover:bg-cyan-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white text-xs font-semibold rounded-lg transition-all duration-200 flex items-center"
+                  title={typeof emailText === 'string' && emailText.length < 100 ? 'Texto muito curto (mínimo 100 caracteres)' : 'Gerar resumo'}
+                >
+                  {loadingSummary ? (
+                    <>
+                      <svg className="animate-spin -ml-1 mr-2 h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Gerando...
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                      Gerar Resumo
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
+
+            {summaryError && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-lg text-sm">
+                {summaryError}
+              </div>
+            )}
+
+            {summary ? (
+              <div className="space-y-3">
+                <div className="bg-white p-4 rounded-xl border border-cyan-200">
+                  <p className="text-xs text-cyan-600 font-semibold mb-2">Resumo:</p>
+                  <ul className="space-y-2">
+                    {summary.summary.map((sentence, index) => (
+                      <li key={index} className="text-sm text-gray-700 flex items-start">
+                        <span className="text-cyan-600 mr-2 font-bold">•</span>
+                        <span>{sentence}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {summary.key_points && summary.key_points.length > 0 && (
+                  <div className="bg-white p-4 rounded-xl border border-cyan-200">
+                    <p className="text-xs text-cyan-600 font-semibold mb-2">Pontos-Chave:</p>
+                    <ul className="space-y-2">
+                      {summary.key_points.map((point, index) => (
+                        <li key={index} className="text-sm text-gray-700 flex items-start">
+                          <span className="text-amber-500 mr-2">🔑</span>
+                          <span>{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="bg-white p-2 rounded-lg border border-cyan-200 text-center">
+                    <p className="text-xs text-gray-500 font-semibold">Relevância</p>
+                    <p className="text-sm font-bold text-cyan-600">
+                      {(summary.relevance_score * 100).toFixed(0)}%
+                    </p>
+                  </div>
+                  <div className="bg-white p-2 rounded-lg border border-cyan-200 text-center">
+                    <p className="text-xs text-gray-500 font-semibold">Redução</p>
+                    <p className="text-sm font-bold text-cyan-600">
+                      {summary.word_reduction.toFixed(0)}%
+                    </p>
+                  </div>
+                  <div className="bg-white p-2 rounded-lg border border-cyan-200 text-center">
+                    <p className="text-xs text-gray-500 font-semibold">Palavras</p>
+                    <p className="text-sm font-bold text-cyan-600">
+                      {summary.summary_word_count}/{summary.original_word_count}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div>
+                {!emailText ? (
+                  <p className="text-sm text-gray-600 italic">
+                    Resumo não disponível (email enviado sem texto/arquivo).
+                  </p>
+                ) : typeof emailText === 'string' && emailText.length < 100 ? (
+                  <div className="bg-amber-50 border border-amber-200 text-amber-700 px-4 py-3 rounded-lg text-sm">
+                    <p className="font-semibold mb-1">⚠️ Texto muito curto</p>
+                    <p>Para gerar um resumo útil, o texto deve ter pelo menos 100 caracteres. Atualmente: {emailText.length} caracteres.</p>
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-600 italic">
+                    Clique no botão acima para gerar um resumo executivo deste email.
+                  </p>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

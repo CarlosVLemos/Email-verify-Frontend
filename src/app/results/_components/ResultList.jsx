@@ -1,6 +1,6 @@
 import ResultCard from './ResultCard';
 
-const ResultList = ({ results }) => {
+const ResultList = ({ results, emailTexts = [] }) => {
   if (!Array.isArray(results)) {
     return null; // Retorna nulo se `results` não for um array
   }
@@ -11,6 +11,7 @@ const ResultList = ({ results }) => {
         <ResultCard
           key={index}
           result={result}
+          emailText={emailTexts[index] || null}
         />
       ))}
     </div>
