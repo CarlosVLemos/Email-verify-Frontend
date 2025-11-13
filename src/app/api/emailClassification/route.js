@@ -1,4 +1,4 @@
-import axiosInstance from './axiosInstance';
+import axiosInstance from '../axiosInstance';
 
 export const classifyEmail = async (emailText, senderEmail, senderName) => {
   try {
@@ -13,7 +13,7 @@ export const classifyEmail = async (emailText, senderEmail, senderName) => {
     throw error;
   }
 };
-o
+
 export const summarizeEmail = async (emailText, maxSentences = 3) => {
   try {
     const response = await axiosInstance.post('/api/classifier/summary/', {
@@ -26,6 +26,7 @@ export const summarizeEmail = async (emailText, maxSentences = 3) => {
     throw error;
   }
 };
+
 export const processBatchEmails = async (emails) => {
   try {
     const response = await axiosInstance.post('/api/classifier/batch/', {
