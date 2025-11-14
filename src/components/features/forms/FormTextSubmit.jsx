@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { classifyEmail } from '../../../app/api/emailClassification/route';
+import { classifyEmail } from '@/services/emailService';
 
 const FormTextSubmit = ({ onSubmit }) => {
   const [text, setText] = useState('');
@@ -72,7 +72,7 @@ const FormTextSubmit = ({ onSubmit }) => {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Seletor de Modo */}
-      <div className="flex gap-3 bg-gray-100 p-1 rounded-lg">
+      <div className="flex gap-3 bg-gray-100 dark:bg-dark-900 p-1 rounded-lg">
         <button
           type="button"
           onClick={() => {
@@ -82,8 +82,8 @@ const FormTextSubmit = ({ onSubmit }) => {
           }}
           className={`flex-1 py-2 px-4 rounded-md font-medium transition-all duration-200 ${
             inputMode === 'text'
-              ? 'bg-white text-indigo-600 shadow-sm'
-              : 'text-gray-600 hover:text-gray-800'
+              ? 'bg-white dark:bg-dark-700 text-indigo-600 dark:text-indigo-400 shadow-sm'
+              : 'text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white'
           }`}
         >
           <span className="flex items-center justify-center">
@@ -102,8 +102,8 @@ const FormTextSubmit = ({ onSubmit }) => {
           }}
           className={`flex-1 py-2 px-4 rounded-md font-medium transition-all duration-200 ${
             inputMode === 'file'
-              ? 'bg-white text-indigo-600 shadow-sm'
-              : 'text-gray-600 hover:text-gray-800'
+              ? 'bg-white dark:bg-dark-700 text-indigo-600 dark:text-indigo-400 shadow-sm'
+              : 'text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white'
           }`}
         >
           <span className="flex items-center justify-center">
@@ -118,24 +118,24 @@ const FormTextSubmit = ({ onSubmit }) => {
       {/* Input de Texto */}
       {inputMode === 'text' && (
         <div className="space-y-2">
-          <label htmlFor="textInput" className="block text-sm font-semibold text-gray-700">
+          <label htmlFor="textInput" className="block text-sm font-semibold text-gray-700 dark:text-gray-200">
             Texto do Email
           </label>
           <textarea
             id="textInput"
             value={text}
             onChange={(e) => setText(e.target.value)}
-            className="w-full p-4 border-2 border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 resize-none hover:border-gray-300"
+            className="w-full p-4 border-2 border-gray-200 dark:border-dark-600 bg-white dark:bg-dark-800 text-gray-900 dark:text-white rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 transition-all duration-200 resize-none hover:border-gray-300 dark:hover:border-dark-500 placeholder:text-gray-400 dark:placeholder:text-gray-500"
             rows="8"
             placeholder="Cole aqui o texto do email que deseja analisar..."
             disabled={loading}
           ></textarea>
           <div className="flex justify-between items-center">
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-500 dark:text-gray-400">
               {text.length} / 50.000 caracteres
             </p>
             {text.length >= 10 && (
-              <p className="text-xs text-green-600 font-medium">
+              <p className="text-xs text-green-600 dark:text-green-400 font-medium">
                 ✓ Texto válido
               </p>
             )}
@@ -146,7 +146,7 @@ const FormTextSubmit = ({ onSubmit }) => {
       {/* Input de Arquivo */}
       {inputMode === 'file' && (
         <div className="space-y-2">
-          <label htmlFor="fileInput" className="block text-sm font-semibold text-gray-700">
+          <label htmlFor="fileInput" className="block text-sm font-semibold text-gray-700 dark:text-gray-200">
             Arquivo do Email
           </label>
           <div className="relative">
@@ -162,28 +162,28 @@ const FormTextSubmit = ({ onSubmit }) => {
               htmlFor="fileInput"
               className={`flex flex-col items-center justify-center w-full h-40 border-2 border-dashed rounded-xl cursor-pointer transition-all duration-200 ${
                 file
-                  ? 'border-green-400 bg-green-50'
-                  : 'border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-gray-400'
+                  ? 'border-green-400 dark:border-green-500 bg-green-50 dark:bg-green-900/20'
+                  : 'border-gray-300 dark:border-dark-600 bg-gray-50 dark:bg-dark-800 hover:bg-gray-100 dark:hover:bg-dark-700 hover:border-gray-400 dark:hover:border-dark-500'
               } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <div className="flex flex-col items-center justify-center pt-5 pb-6">
                 {file ? (
                   <>
-                    <svg className="w-12 h-12 mb-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-12 h-12 mb-3 text-green-500 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <p className="text-sm font-semibold text-green-700">{file.name}</p>
-                    <p className="text-xs text-green-600">{(file.size / 1024).toFixed(2)} KB</p>
+                    <p className="text-sm font-semibold text-green-700 dark:text-green-300">{file.name}</p>
+                    <p className="text-xs text-green-600 dark:text-green-400">{(file.size / 1024).toFixed(2)} KB</p>
                   </>
                 ) : (
                   <>
-                    <svg className="w-12 h-12 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-12 h-12 mb-3 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                     </svg>
-                    <p className="mb-2 text-sm text-gray-600 font-medium">
+                    <p className="mb-2 text-sm text-gray-600 dark:text-gray-300 font-medium">
                       <span className="font-semibold">Clique para fazer upload</span> ou arraste e solte
                     </p>
-                    <p className="text-xs text-gray-500">TXT, PDF ou DOCX (máx. 10MB)</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">TXT, PDF ou DOCX (máx. 10MB)</p>
                   </>
                 )}
               </div>
@@ -196,7 +196,7 @@ const FormTextSubmit = ({ onSubmit }) => {
                 setFile(null);
                 document.getElementById('fileInput').value = '';
               }}
-              className="text-sm text-red-600 hover:text-red-700 font-medium"
+              className="text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium"
             >
               ✗ Remover arquivo
             </button>
