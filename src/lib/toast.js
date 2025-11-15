@@ -5,8 +5,6 @@
 
 'use client';
 
-// Comentado até instalar: import toast, { Toaster } from 'react-hot-toast';
-
 /**
  * Configurações de toast customizadas
  */
@@ -41,7 +39,6 @@ export const toastConfig = {
  * Helper functions para diferentes tipos de toast
  */
 
-// Descomentar após instalar react-hot-toast
 /*
 export const showToast = {
   success: (message, options = {}) => {
@@ -99,7 +96,6 @@ export const showToast = {
 };
 */
 
-// Versão mock para desenvolvimento sem a biblioteca
 export const showToast = {
   success: (message) => console.log('✅ Success:', message),
   error: (message) => console.error('❌ Error:', message),

@@ -11,7 +11,6 @@ export { default as ErrorMessage } from './ErrorMessage';
 export { default as PieChart } from './PieChart';
 export { default as BarChart } from './BarChart';
 
-// Skeleton components
 export {
   Skeleton,
   SkeletonResultCard,

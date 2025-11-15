@@ -1,11 +1,14 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8000', // Alterado para HTTP para evitar problemas com SSL
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000', // Fallback para desenvolvimento
+  timeout: parseInt(process.env.NEXT_PUBLIC_API_TIMEOUT) || 120000,
+  headers: {
+    'X-API-Key': process.env.NEXT_PUBLIC_API_KEY,
+  },
   withCredentials: true, // Permite o envio de cookies e credenciais
 });
 
-// Interceptor para lidar com FormData automaticamente
 axiosInstance.interceptors.request.use((config) => {
   if (config.data instanceof FormData) {
     delete config.headers['Content-Type']; // Permite que o navegador defina o cabeçalho automaticamente
@@ -27,7 +30,6 @@ axiosInstance.interceptors.request.use((config) => {
   return config;
 });
 
-// Interceptor para log de respostas e erros
 axiosInstance.interceptors.response.use(
   (response) => {
     console.log('Response OK:', response.status);
