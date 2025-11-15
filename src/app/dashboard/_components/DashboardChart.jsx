@@ -1,12 +1,27 @@
-import { Line } from 'react-chartjs-2';
+import PieChart from '@/components/shared/PieChart';
+import BarChart from '@/components/shared/BarChart';
 
-const DashboardChart = ({ data, options }) => {
-  return (
-    <div className="p-4 border rounded-lg shadow-md bg-white">
-      <h3 className="text-lg font-semibold text-gray-800 mb-4">Gráfico de Tendências</h3>
-      <Line data={data} options={options} />
-    </div>
-  );
-};
+export default function DashboardChart({ data, type = 'bar', showPie = false }) {
+  if (!data || !data.categories || data.categories.length === 0) {
+    return (
+      <div className="text-center py-8 text-gray-400">
+        Nenhum dado disponível para exibição
+      </div>
+    );
+  }
 
-export default DashboardChart;
+  
+  if (showPie) {
+    return <PieChart data={data} />;
+  }
+
+  
+  const chartData = data.categories.map(cat => ({
+    category: cat.category,
+    label: cat.category,
+    count: cat.count,
+    value: cat.count
+  }));
+
+  return <BarChart data={chartData} maxValue={data.total_emails} />;
+}

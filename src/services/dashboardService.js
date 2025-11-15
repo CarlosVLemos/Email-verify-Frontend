@@ -1,14 +1,4 @@
-import axiosInstance from '../axiosInstance';
-
-export const checkApiHealth = async () => {
-  try {
-    const response = await axiosInstance.get('/api/classifier/health/');
-    return response.data;
-  } catch (error) {
-    console.error('Error checking API health:', error);
-    throw error;
-  }
-};
+import axiosInstance from '@/app/api/axiosInstance';
 
 export const getDashboardOverview = async (days = 30) => {
   try {

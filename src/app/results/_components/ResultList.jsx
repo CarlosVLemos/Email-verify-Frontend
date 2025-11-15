@@ -1,8 +1,8 @@
 import ResultCard from './ResultCard';
 
-const ResultList = ({ results }) => {
+const ResultList = ({ results, emailTexts = [] }) => {
   if (!Array.isArray(results)) {
-    return null; // Retorna nulo se `results` não for um array
+    return null; 
   }
 
   return (
@@ -10,8 +10,8 @@ const ResultList = ({ results }) => {
       {results.map((result, index) => (
         <ResultCard
           key={index}
-          category={result.category}
-          suggestedResponse={result.suggestedResponse}
+          result={result}
+          emailText={emailTexts[index] || null}
         />
       ))}
     </div>
