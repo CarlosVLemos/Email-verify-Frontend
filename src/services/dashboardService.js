@@ -1,8 +1,18 @@
 import axiosInstance from '@/app/api/axiosInstance';
 
+export const checkApiHealth = async () => {
+  try {
+    const response = await axiosInstance.get('/api/classifier/health');
+    return response.data;
+  } catch (error) {
+    console.error('Error checking API health:', error);
+    throw error;
+  }
+};
+
 export const getDashboardOverview = async (days = 30) => {
   try {
-    const response = await axiosInstance.get(`/api/analytics/dashboard/overview/?days=${days}`);
+    const response = await axiosInstance.get(`/api/analytics/dashboard/overview?days=${days}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching dashboard overview:', error);
@@ -12,7 +22,7 @@ export const getDashboardOverview = async (days = 30) => {
 
 export const getDashboardTrends = async (days = 30, granularity = 'daily') => {
   try {
-    const response = await axiosInstance.get(`/api/analytics/dashboard/trends/?days=${days}&granularity=${granularity}`);
+    const response = await axiosInstance.get(`/api/analytics/dashboard/trends?days=${days}&granularity=${granularity}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching dashboard trends:', error);
@@ -22,7 +32,7 @@ export const getDashboardTrends = async (days = 30, granularity = 'daily') => {
 
 export const getDashboardCategories = async (days = 30) => {
   try {
-    const response = await axiosInstance.get(`/api/analytics/dashboard/categories/?days=${days}`);
+    const response = await axiosInstance.get(`/api/analytics/dashboard/categories?days=${days}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching dashboard categories:', error);
@@ -32,7 +42,7 @@ export const getDashboardCategories = async (days = 30) => {
 
 export const getDashboardSenders = async (limit = 10, minEmails = 1) => {
   try {
-    const response = await axiosInstance.get(`/api/analytics/dashboard/senders/?limit=${limit}&min_emails=${minEmails}`);
+    const response = await axiosInstance.get(`/api/analytics/dashboard/senders?limit=${limit}&min_emails=${minEmails}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching dashboard senders:', error);
@@ -42,7 +52,7 @@ export const getDashboardSenders = async (limit = 10, minEmails = 1) => {
 
 export const getDashboardKeywords = async (days = 30, limit = 10) => {
   try {
-    const response = await axiosInstance.get(`/api/analytics/dashboard/keywords/?days=${days}&limit=${limit}`);
+    const response = await axiosInstance.get(`/api/analytics/dashboard/keywords?days=${days}&limit=${limit}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching dashboard keywords:', error);
@@ -52,7 +62,7 @@ export const getDashboardKeywords = async (days = 30, limit = 10) => {
 
 export const getDashboardPerformance = async (days = 30) => {
   try {
-    const response = await axiosInstance.get(`/api/analytics/dashboard/performance/?days=${days}`);
+    const response = await axiosInstance.get(`/api/analytics/dashboard/performance?days=${days}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching dashboard performance:', error);
@@ -62,7 +72,7 @@ export const getDashboardPerformance = async (days = 30) => {
 
 export const getEmailsList = async (days = 30, category = null, page = 1, perPage = 20) => {
   try {
-    let url = `/api/analytics/emails/?days=${days}&page=${page}&per_page=${perPage}`;
+    let url = `/api/analytics/emails?days=${days}&page=${page}&per_page=${perPage}`;
     if (category) url += `&category=${category}`;
     
     const response = await axiosInstance.get(url);

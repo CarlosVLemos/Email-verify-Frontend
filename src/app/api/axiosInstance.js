@@ -4,57 +4,30 @@ const axiosInstance = axios.create({
   baseURL: '',
   timeout: parseInt(process.env.NEXT_PUBLIC_API_TIMEOUT) || 120000,
   headers: {
-    'x-api-key': process.env.NEXT_PUBLIC_API_KEY,
+    'Content-Type': 'application/json',
   },
-  // Removido withCredentials temporariamente para evitar problemas CORS
-  // withCredentials: true,
 });
 
-axiosInstance.interceptors.request.use((config) => {
-  console.log('Debugging Axios Base URL:', {
-    baseURL: config.baseURL,
-    url: config.url,
-    fullURL: `${config.baseURL}${config.url}`,
-    headers: config.headers,
-  });
-  return config;
-});
-
+// Interceptor para configurar Content-Type baseado no tipo de dados
 axiosInstance.interceptors.request.use((config) => {
   if (config.data instanceof FormData) {
-    delete config.headers['Content-Type']; 
-    console.log('FormData detectado - Content-Type removido para auto-configuração');
-  } else {
-    
-    if (!config.headers['Content-Type']) {
-      config.headers['Content-Type'] = 'application/json';
-    }
+    // Remove Content-Type para deixar o browser definir (inclui boundary)
+    delete config.headers['Content-Type'];
   }
-  
-  console.log('Request config:', {
-    url: config.url,
-    method: config.method,
-    contentType: config.headers['Content-Type'],
-    isFormData: config.data instanceof FormData,
-    hasApiKey: !!config.headers['x-api-key'],
-    environment: process.env.NODE_ENV,
-    headers: Object.keys(config.headers), // Debug: mostra todos os headers
-  });
-  
   return config;
 });
 
+// Interceptor para tratamento de erros
 axiosInstance.interceptors.response.use(
-  (response) => {
-    console.log('Response OK:', response.status);
-    return response;
-  },
+  (response) => response,
   (error) => {
-    console.error('Response Error:', {
-      status: error.response?.status,
-      data: error.response?.data,
-      message: error.message
-    });
+    if (process.env.NODE_ENV === 'development') {
+      console.error('API Error:', {
+        status: error.response?.status,
+        message: error.message,
+        url: error.config?.url,
+      });
+    }
     return Promise.reject(error);
   }
 );

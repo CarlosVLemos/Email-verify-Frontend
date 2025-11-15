@@ -5,19 +5,30 @@ const API_KEY = process.env.NEXT_PUBLIC_API_KEY || '';
 
 export async function GET(req) {
   try {
-    // Extrai o path e query params da URL
-    const { searchParams, pathname } = new URL(req.url);
+    const { searchParams } = new URL(req.url);
     const queryString = searchParams.toString();
     
-    // Constrói a URL do backend preservando query params
-    const backendUrl = `${BACKEND_BASE.replace(/\/$/, '')}/api/analytics/dashboard/overview/${queryString ? `?${queryString}` : ''}`;
+    const backendUrl = `${BACKEND_BASE}/api/analytics/dashboard/overview/${queryString ? `?${queryString}` : ''}`;
+    
+    console.log('[Dashboard Overview Proxy]', {
+      backendBase: BACKEND_BASE,
+      backendUrl,
+      hasApiKey: !!API_KEY,
+    });
 
-    const forwardHeaders = {};
+    const forwardHeaders = {
+      'Accept': 'application/json',
+    };
     if (API_KEY) forwardHeaders['x-api-key'] = API_KEY;
 
     const res = await fetch(backendUrl, {
       method: 'GET',
       headers: forwardHeaders,
+    });
+
+    console.log('[Dashboard Overview Proxy] Response:', {
+      status: res.status,
+      statusText: res.statusText,
     });
 
     const responseContentType = res.headers.get('content-type') || 'application/json';
@@ -28,7 +39,11 @@ export async function GET(req) {
       headers: { 'content-type': responseContentType },
     });
   } catch (err) {
-    console.error('Proxy error to backend analytics overview:', err);
-    return NextResponse.json({ message: 'Proxy error', details: String(err) }, { status: 502 });
+    console.error('[Dashboard Overview Proxy] Error:', err);
+    return NextResponse.json({ 
+      message: 'Proxy error', 
+      details: String(err),
+      backendUrl: BACKEND_BASE,
+    }, { status: 502 });
   }
 }

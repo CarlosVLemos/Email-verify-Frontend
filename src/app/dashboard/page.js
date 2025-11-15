@@ -35,8 +35,9 @@ export default function DashboardPage() {
       console.log('Categories:', categoriesData);
       console.log('Senders:', sendersData);
 
-      setOverview(overviewData);
-      setCategories(categoriesData);
+      // Extrai os dados corretos dos objetos de resposta
+      setOverview(overviewData.overview || overviewData);
+      setCategories(categoriesData.distribution || categoriesData);
       setSenders(sendersData);
     } catch (err) {
       console.error('Error fetching dashboard data:', err);
@@ -163,28 +164,43 @@ export default function DashboardPage() {
             <div className="bg-white dark:bg-dark-800 backdrop-blur-lg rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-xl border border-gray-200 dark:border-dark-700">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4">Top Remetentes</h2>
               <div className="space-y-2 sm:space-y-3">
-                {senders.senders && senders.senders.length > 0 ? (
-                  senders.senders.map((sender, index) => (
-                    <div
-                      key={index}
-                      className="flex justify-between items-center p-2 sm:p-3 bg-gray-50 dark:bg-dark-700 rounded-lg hover:bg-gray-100 dark:hover:bg-dark-600 transition-colors"
-                    >
-                      <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-                        <span className="text-lg sm:text-2xl font-bold text-primary-500 flex-shrink-0">#{index + 1}</span>
-                        <div className="min-w-0 flex-1">
-                          <p className="text-sm sm:text-base text-gray-900 dark:text-white font-medium truncate">{sender.sender || 'Desconhecido'}</p>
-                          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{sender.category || 'N/A'}</p>
+                {(() => {
+                  const allSenders = [
+                    ...(senders.top_productive || []),
+                    ...(senders.top_unproductive || [])
+                  ].slice(0, 10);
+                  
+                  return allSenders.length > 0 ? (
+                    allSenders.map((sender, index) => (
+                      <div
+                        key={index}
+                        className="flex justify-between items-center p-2 sm:p-3 bg-gray-50 dark:bg-dark-700 rounded-lg hover:bg-gray-100 dark:hover:bg-dark-600 transition-colors"
+                      >
+                        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                          <span className="text-lg sm:text-2xl font-bold text-primary-500 flex-shrink-0">#{index + 1}</span>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm sm:text-base text-gray-900 dark:text-white font-medium truncate">
+                              {sender.sender_identifier || sender.sender || 'Desconhecido'}
+                            </p>
+                            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                              {sender.productivity_rate !== undefined 
+                                ? `${sender.productivity_rate.toFixed(1)}% produtivo` 
+                                : (sender.category || 'N/A')}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="text-right flex-shrink-0 ml-2">
+                          <p className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
+                            {sender.total_count || sender.count || 0}
+                          </p>
+                          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">emails</p>
                         </div>
                       </div>
-                      <div className="text-right flex-shrink-0 ml-2">
-                        <p className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">{sender.count}</p>
-                        <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">emails</p>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 text-center py-4">Nenhum remetente encontrado</p>
-                )}
+                    ))
+                  ) : (
+                    <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 text-center py-4">Nenhum remetente encontrado</p>
+                  );
+                })()}
               </div>
             </div>
           )}

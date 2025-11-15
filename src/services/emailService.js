@@ -14,7 +14,7 @@ export const classifyEmail = async (emailTextOrFormData, senderEmail = null, sen
       if (senderName) payload.sender_name = senderName;
     }
 
-    const response = await axiosInstance.post('/api/classifier/classify/', payload);
+    const response = await axiosInstance.post('/api/classifier/classify', payload);
     return response.data;
   } catch (error) {
     console.error('Error classifying email:', error);
@@ -38,7 +38,7 @@ export const summarizeEmail = async (emailTextOrFormData, maxSentences = 3) => {
       };
     }
 
-    const response = await axiosInstance.post('/api/classifier/summary/', payload);
+    const response = await axiosInstance.post('/api/classifier/summary', payload);
     return response.data;
   } catch (error) {
     console.error('Error summarizing email:', error);
@@ -48,7 +48,7 @@ export const summarizeEmail = async (emailTextOrFormData, maxSentences = 3) => {
 
 export const processBatchEmails = async (emails) => {
   try {
-    const response = await axiosInstance.post('/api/classifier/batch/', { emails });
+    const response = await axiosInstance.post('/api/classifier/batch', { emails });
     return response.data;
   } catch (error) {
     console.error('Error processing batch emails:', error);
@@ -68,7 +68,7 @@ export const generateHuggingFaceResponse = async (emailText, context = null, ton
       payload.context = context;
     }
 
-    const response = await axiosInstance.post('/api/classifier/huggingface-response/', payload);
+    const response = await axiosInstance.post('/api/classifier/huggingface-response', payload);
     return response.data;
   } catch (error) {
     console.error('Error generating Hugging Face response:', error);

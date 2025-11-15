@@ -2,7 +2,10 @@ import PieChart from '@/components/shared/PieChart';
 import BarChart from '@/components/shared/BarChart';
 
 export default function DashboardChart({ data, type = 'bar', showPie = false }) {
-  if (!data || !data.categories || data.categories.length === 0) {
+  // Aceita tanto data.categories quanto data direto (array)
+  const categories = Array.isArray(data) ? data : (data?.categories || data?.distribution || []);
+  
+  if (!categories || categories.length === 0) {
     return (
       <div className="text-center py-8 text-gray-400">
         Nenhum dado disponível para exibição
@@ -10,18 +13,28 @@ export default function DashboardChart({ data, type = 'bar', showPie = false }) 
     );
   }
 
-  
+  // Se showPie, passa os dados formatados para o PieChart
   if (showPie) {
-    return <PieChart data={data} />;
+    const pieData = categories.map(cat => ({
+      category: cat.category || cat.label,
+      subcategory: cat.subcategory,
+      count: cat.count,
+      percentage: cat.percentage,
+    }));
+    return <PieChart data={pieData} />;
   }
 
-  
-  const chartData = data.categories.map(cat => ({
-    category: cat.category,
-    label: cat.category,
+  // Formata dados para o BarChart
+  const chartData = categories.map(cat => ({
+    category: cat.category || cat.label,
+    label: cat.category || cat.label,
     count: cat.count,
-    value: cat.count
+    value: cat.count,
+    subcategory: cat.subcategory,
   }));
 
-  return <BarChart data={chartData} maxValue={data.total_emails} />;
+  // Calcula total de emails da soma das categorias se não estiver disponível
+  const totalEmails = data?.total_emails || categories.reduce((sum, cat) => sum + (cat.count || 0), 0);
+
+  return <BarChart data={chartData} maxValue={totalEmails} />;
 }
