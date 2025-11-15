@@ -5,18 +5,18 @@ import ResultList from './results/_components/ResultList';
 import { useState } from 'react';
 
 export default function Home() {
-  const [results, setResults] = useState([]); // Array de resultados
-  const [emailTexts, setEmailTexts] = useState([]); // Array de textos dos emails
-  const [activeTab, setActiveTab] = useState('single'); // 'single' ou 'batch'
+  const [results, setResults] = useState([]); 
+  const [emailTexts, setEmailTexts] = useState([]); 
+  const [activeTab, setActiveTab] = useState('single'); 
 
   const handleSingleResult = (result, emailText) => {
-    // Adiciona um único resultado ao array
+    
     setResults([result]);
     setEmailTexts([emailText]);
   };
 
   const handleBatchResults = (batchResults, batchTexts = []) => {
-    // Para processamento em lote
+    
     setResults(batchResults);
     setEmailTexts(batchTexts);
   };
@@ -24,7 +24,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-50 dark:from-dark-950 dark:via-dark-900 dark:to-dark-950">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
-        {/* Header */}
+        {}
         <div className="text-center mb-8 sm:mb-12">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 px-2">
             📧 Email Intelligence API
@@ -34,7 +34,7 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Tabs Navigation */}
+        {}
         <div className="bg-white dark:bg-dark-800 rounded-xl sm:rounded-2xl shadow-xl border border-gray-100 dark:border-dark-700 overflow-hidden mb-6 sm:mb-8">
           <div className="flex flex-col sm:flex-row border-b border-gray-200 dark:border-dark-700">
             <button
@@ -72,7 +72,7 @@ export default function Home() {
             </button>
           </div>
 
-          {/* Tab Content */}
+          {}
           <div className="p-4 sm:p-6 lg:p-8">
             {activeTab === 'single' && (
               <div className="animate-fadeIn">
@@ -104,7 +104,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Results Section */}
+        {}
         {results.length > 0 && (
           <div className="animate-fadeIn">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4 sm:mb-6">

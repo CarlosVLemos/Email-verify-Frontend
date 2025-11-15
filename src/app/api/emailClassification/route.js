@@ -26,17 +26,17 @@ export const summarizeEmail = async (emailTextOrFormData, maxSentences = 3) => {
     let payload;
     
     if (emailTextOrFormData instanceof FormData) {
-      // É FormData (arquivo)
+      
       payload = emailTextOrFormData;
       
-      // Adiciona max_sentences se não existir
+      
       if (!payload.has('max_sentences')) {
         payload.append('max_sentences', maxSentences.toString());
       }
       
       console.log('Enviando FormData para resumo com arquivo');
     } else {
-      // É texto
+      
       payload = {
         email_text: emailTextOrFormData,
         max_sentences: maxSentences,

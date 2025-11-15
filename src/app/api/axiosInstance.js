@@ -1,20 +1,22 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000', // Fallback para desenvolvimento
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000',
   timeout: parseInt(process.env.NEXT_PUBLIC_API_TIMEOUT) || 120000,
   headers: {
-    'X-API-Key': process.env.NEXT_PUBLIC_API_KEY,
+    // Header da API key removido temporariamente para evitar erro CORS
+    // TODO: Re-adicionar quando o backend estiver configurado para aceitar o header
   },
-  withCredentials: true, // Permite o envio de cookies e credenciais
+  // Removido withCredentials temporariamente para evitar problemas CORS
+  // withCredentials: true,
 });
 
 axiosInstance.interceptors.request.use((config) => {
   if (config.data instanceof FormData) {
-    delete config.headers['Content-Type']; // Permite que o navegador defina o cabeçalho automaticamente
+    delete config.headers['Content-Type']; 
     console.log('FormData detectado - Content-Type removido para auto-configuração');
   } else {
-    // Garante que JSON tenha o Content-Type correto
+    
     if (!config.headers['Content-Type']) {
       config.headers['Content-Type'] = 'application/json';
     }
@@ -24,7 +26,10 @@ axiosInstance.interceptors.request.use((config) => {
     url: config.url,
     method: config.method,
     contentType: config.headers['Content-Type'],
-    isFormData: config.data instanceof FormData
+    isFormData: config.data instanceof FormData,
+    hasApiKey: !!config.headers['x-api-key'],
+    environment: process.env.NODE_ENV,
+    headers: Object.keys(config.headers), // Debug: mostra todos os headers
   });
   
   return config;

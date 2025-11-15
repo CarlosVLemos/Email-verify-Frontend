@@ -50,7 +50,7 @@ export default function DashboardPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-50 dark:from-dark-950 dark:via-dark-900 dark:to-dark-950 p-8">
         <div className="max-w-7xl mx-auto space-y-8">
-          {/* Header Skeleton */}
+          {}
           <div className="flex justify-between items-center mb-8">
             <div>
               <div className="h-10 w-48 bg-gray-200 dark:bg-dark-700 rounded-lg animate-shimmer mb-2"></div>
@@ -63,10 +63,10 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Overview Skeleton */}
+          {}
           <SkeletonDashboardOverview />
 
-          {/* Charts Skeleton */}
+          {}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <SkeletonChart />
             <SkeletonSendersList />
@@ -95,14 +95,14 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-50 dark:from-dark-950 dark:via-dark-900 dark:to-dark-950 p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
-        {/* Header */}
+        {}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
           <div>
             <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-2">Dashboard</h1>
             <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">Visão geral das análises de emails</p>
           </div>
           
-          {/* Filtro de período */}
+          {}
           <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0">
             {[7, 30, 90].map((d) => (
               <button
@@ -120,17 +120,17 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Overview Cards */}
+        {}
         {overview && <DashboardOverview data={overview} />}
 
-        {/* Charts Section */}
+        {}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
-          {/* Categories Chart */}
+          {}
           {categories && (
             <div className="bg-white dark:bg-dark-800 backdrop-blur-lg rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-xl border border-gray-200 dark:border-dark-700">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4">
                 <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Distribuição de Categorias</h2>
-                {/* Toggle Chart Type */}
+                {}
                 <button
                   onClick={() => setShowPieChart(!showPieChart)}
                   className="px-3 py-1.5 bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 rounded-lg hover:bg-primary-200 dark:hover:bg-primary-800/50 transition-colors text-xs sm:text-sm font-medium flex items-center gap-2 justify-center sm:justify-start"
@@ -158,7 +158,7 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* Top Senders */}
+          {}
           {senders && (
             <div className="bg-white dark:bg-dark-800 backdrop-blur-lg rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-xl border border-gray-200 dark:border-dark-700">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4">Top Remetentes</h2>

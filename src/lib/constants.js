@@ -1,10 +1,4 @@
-/**
- * Constantes da aplicação
- */
 
-/**
- * Configurações de categorias de email
- */
 export const CATEGORY_CONFIG = {
   'Produtivo': { 
     color: 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700', 
@@ -29,9 +23,6 @@ export const CATEGORY_CONFIG = {
   },
 };
 
-/**
- * Configurações de tom de email
- */
 export const TONE_CONFIG = {
   'Positivo': { 
     color: 'text-green-600 dark:text-green-400', 
@@ -50,9 +41,6 @@ export const TONE_CONFIG = {
   },
 };
 
-/**
- * Configurações de urgência de email
- */
 export const URGENCY_CONFIG = {
   'Alta': { 
     color: 'bg-red-100 text-red-700 border-red-300 dark:bg-red-900/30 dark:text-red-300 dark:border-red-700', 
@@ -74,9 +62,6 @@ export const URGENCY_CONFIG = {
   },
 };
 
-/**
- * Cores de categorias para gráficos
- */
 export const CHART_COLORS = {
   'Produtivo': {
     main: '#22c55e',
@@ -98,9 +83,6 @@ export const CHART_COLORS = {
   }
 };
 
-/**
- * Períodos de tempo para filtros
- */
 export const TIME_PERIODS = {
   WEEK: { days: 7, label: '7 dias' },
   MONTH: { days: 30, label: '30 dias' },
@@ -109,11 +91,8 @@ export const TIME_PERIODS = {
   YEAR: { days: 365, label: '1 ano' }
 };
 
-/**
- * URLs da API
- */
 export const API_ENDPOINTS = {
-  BASE_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
+  BASE_URL: process.env.NEXT_PUBLIC_API_URL,
   CLASSIFY: '/api/email/classify/',
   SUMMARIZE: '/api/email/summarize/',
   BATCH: '/api/email/batch-classify/',
@@ -128,9 +107,6 @@ export const API_ENDPOINTS = {
   }
 };
 
-/**
- * Mensagens de erro padrão
- */
 export const ERROR_MESSAGES = {
   NETWORK: 'Erro de conexão. Verifique sua internet.',
   SERVER: 'Erro no servidor. Tente novamente mais tarde.',
@@ -140,9 +116,6 @@ export const ERROR_MESSAGES = {
   GENERIC: 'Algo deu errado. Tente novamente.'
 };
 
-/**
- * Mensagens de sucesso padrão
- */
 export const SUCCESS_MESSAGES = {
   EMAIL_CLASSIFIED: 'Email classificado com sucesso!',
   BATCH_PROCESSED: 'Lote processado com sucesso!',
@@ -150,17 +123,11 @@ export const SUCCESS_MESSAGES = {
   DATA_SAVED: 'Dados salvos com sucesso!'
 };
 
-/**
- * Configurações de paginação
- */
 export const PAGINATION = {
   DEFAULT_PAGE_SIZE: 10,
   PAGE_SIZE_OPTIONS: [10, 25, 50, 100]
 };
 
-/**
- * Configurações de animação
- */
 export const ANIMATION = {
   DURATION: {
     FAST: 150,
@@ -174,9 +141,6 @@ export const ANIMATION = {
   }
 };
 
-/**
- * Breakpoints responsivos (match Tailwind)
- */
 export const BREAKPOINTS = {
   SM: 640,
   MD: 768,
@@ -185,9 +149,6 @@ export const BREAKPOINTS = {
   '2XL': 1536
 };
 
-/**
- * Storage keys para localStorage
- */
 export const STORAGE_KEYS = {
   THEME: 'email-intelligence-theme',
   USER_PREFERENCES: 'email-intelligence-preferences',

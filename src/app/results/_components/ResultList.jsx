@@ -2,7 +2,7 @@ import ResultCard from './ResultCard';
 
 const ResultList = ({ results, emailTexts = [] }) => {
   if (!Array.isArray(results)) {
-    return null; // Retorna nulo se `results` não for um array
+    return null; 
   }
 
   return (

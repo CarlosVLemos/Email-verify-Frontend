@@ -21,7 +21,7 @@ const Navbar = () => {
     <nav className="bg-white dark:bg-dark-900 shadow-lg border-b border-gray-200 dark:border-dark-700 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-14 sm:h-16">
-          {/* Logo */}
+          {}
           <Link href="/" className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0" onClick={closeMobileMenu}>
             <div className="bg-primary-500 p-1.5 sm:p-2 rounded-lg shadow-lg">
               <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -37,7 +37,7 @@ const Navbar = () => {
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
+          {}
           <div className="hidden md:flex items-center space-x-2">
             {navItems.map((item) => (
               <Link
@@ -55,7 +55,7 @@ const Navbar = () => {
               </Link>
             ))}
             
-            {/* Theme Toggle Desktop */}
+            {}
             <button
               onClick={toggleTheme}
               className="p-2 rounded-lg bg-gray-100 dark:bg-dark-800 hover:bg-gray-200 dark:hover:bg-dark-700 transition-colors ml-2"
@@ -69,9 +69,9 @@ const Navbar = () => {
             </button>
           </div>
 
-          {/* Mobile Menu Button & Theme Toggle */}
+          {}
           <div className="flex md:hidden items-center gap-2">
-            {/* Theme Toggle Mobile */}
+            {}
             <button
               onClick={toggleTheme}
               className="p-2 rounded-lg bg-gray-100 dark:bg-dark-800 hover:bg-gray-200 dark:hover:bg-dark-700 transition-colors"
@@ -84,7 +84,7 @@ const Navbar = () => {
               )}
             </button>
 
-            {/* Hamburger Button */}
+            {}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-dark-800 transition-colors"
@@ -102,7 +102,7 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {}
         <div 
           className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
             mobileMenuOpen ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'

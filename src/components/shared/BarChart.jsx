@@ -1,7 +1,3 @@
-/**
- * Gráfico de Barras Animado
- * Versão CSS pura com animações suaves
- */
 
 'use client';
 
@@ -43,7 +39,7 @@ const BarChart = ({ data, title, maxValue }) => {
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
             >
-              {/* Label e valor */}
+              {}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   {item.icon && <span className="text-xl">{item.icon}</span>}
@@ -69,7 +65,7 @@ const BarChart = ({ data, title, maxValue }) => {
                 </div>
               </div>
 
-              {/* Barra de progresso */}
+              {}
               <div className="relative h-3 bg-gray-200 dark:bg-dark-700 rounded-full overflow-hidden">
                 <div
                   className="absolute top-0 left-0 h-full rounded-full transition-all duration-700 ease-out"
@@ -79,7 +75,7 @@ const BarChart = ({ data, title, maxValue }) => {
                     boxShadow: hoveredIndex === index ? `0 0 20px ${color.main}50` : 'none'
                   }}
                 >
-                  {/* Animação de brilho */}
+                  {}
                   <div
                     className="absolute top-0 left-0 h-full w-full opacity-30"
                     style={{
@@ -94,7 +90,7 @@ const BarChart = ({ data, title, maxValue }) => {
         })}
       </div>
 
-      {/* Total */}
+      {}
       <div className="pt-4 border-t border-gray-200 dark:border-dark-700">
         <div className="flex items-center justify-between">
           <span className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">

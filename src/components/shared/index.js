@@ -1,6 +1,3 @@
-/**
- * Barrel export para componentes compartilhados
- */
 
 export { default as Header } from './Header';
 export { default as Footer } from './Footer';

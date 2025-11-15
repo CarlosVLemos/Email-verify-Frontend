@@ -32,13 +32,13 @@ const FormTextSubmit = ({ onSubmit }) => {
       
       if (inputMode === 'text') {
         result = await classifyEmail(text.trim());
-        emailTextOrFile = text.trim(); // Passa o texto
+        emailTextOrFile = text.trim(); 
       } else {
-        // Envia arquivo via FormData
+        
         const formData = new FormData();
         formData.append('file', file);
         result = await classifyEmail(formData);
-        emailTextOrFile = file; // Passa o arquivo para permitir resumo
+        emailTextOrFile = file; 
       }
       
       onSubmit(result, emailTextOrFile);
@@ -71,7 +71,7 @@ const FormTextSubmit = ({ onSubmit }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Seletor de Modo */}
+      {}
       <div className="flex gap-3 bg-gray-100 dark:bg-dark-900 p-1 rounded-lg">
         <button
           type="button"
@@ -115,7 +115,7 @@ const FormTextSubmit = ({ onSubmit }) => {
         </button>
       </div>
 
-      {/* Input de Texto */}
+      {}
       {inputMode === 'text' && (
         <div className="space-y-2">
           <label htmlFor="textInput" className="block text-sm font-semibold text-gray-700 dark:text-gray-200">
@@ -143,7 +143,7 @@ const FormTextSubmit = ({ onSubmit }) => {
         </div>
       )}
 
-      {/* Input de Arquivo */}
+      {}
       {inputMode === 'file' && (
         <div className="space-y-2">
           <label htmlFor="fileInput" className="block text-sm font-semibold text-gray-700 dark:text-gray-200">
@@ -204,7 +204,7 @@ const FormTextSubmit = ({ onSubmit }) => {
         </div>
       )}
 
-      {/* Mensagem de Erro */}
+      {}
       {error && (
         <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg">
           <div className="flex items-center">
@@ -216,7 +216,7 @@ const FormTextSubmit = ({ onSubmit }) => {
         </div>
       )}
 
-      {/* Botão de Envio */}
+      {}
       <button
         type="submit"
         disabled={loading || (inputMode === 'text' ? text.trim().length < 10 : !file)}
@@ -224,7 +224,7 @@ const FormTextSubmit = ({ onSubmit }) => {
       >
         {loading ? (
           <span className="flex items-center justify-center">
-            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>

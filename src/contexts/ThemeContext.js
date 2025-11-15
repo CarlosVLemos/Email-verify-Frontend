@@ -10,7 +10,7 @@ export function ThemeProvider({ children }) {
   const [theme, setTheme] = useLocalStorage(STORAGE_KEYS.THEME, 'dark');
 
   useEffect(() => {
-    // Aplicar tema ao document
+    
     document.documentElement.classList.toggle('dark', theme === 'dark');
   }, [theme]);
 

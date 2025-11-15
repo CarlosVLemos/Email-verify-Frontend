@@ -1,18 +1,11 @@
-/**
- * Sistema de Toast Notifications
- * Wrapper customizado para react-hot-toast
- */
 
 'use client';
 
-/**
- * Configurações de toast customizadas
- */
 export const toastConfig = {
   duration: 4000,
   position: 'top-right',
   
-  // Estilos para tema claro/escuro
+  
   style: {
     borderRadius: '12px',
     padding: '16px',
@@ -20,7 +13,7 @@ export const toastConfig = {
     maxWidth: '500px',
   },
   
-  // Estilos específicos por tipo
+  
   success: {
     iconTheme: {
       primary: '#22c55e',
@@ -35,66 +28,7 @@ export const toastConfig = {
   },
 };
 
-/**
- * Helper functions para diferentes tipos de toast
- */
 
-/*
-export const showToast = {
-  success: (message, options = {}) => {
-    return toast.success(message, {
-      ...toastConfig,
-      ...toastConfig.success,
-      ...options,
-    });
-  },
-
-  error: (message, options = {}) => {
-    return toast.error(message, {
-      ...toastConfig,
-      ...toastConfig.error,
-      ...options,
-    });
-  },
-
-  loading: (message, options = {}) => {
-    return toast.loading(message, {
-      ...toastConfig,
-      ...options,
-    });
-  },
-
-  promise: (promise, messages, options = {}) => {
-    return toast.promise(
-      promise,
-      {
-        loading: messages.loading || 'Carregando...',
-        success: messages.success || 'Concluído!',
-        error: messages.error || 'Erro ao processar',
-      },
-      {
-        ...toastConfig,
-        ...options,
-      }
-    );
-  },
-
-  custom: (message, options = {}) => {
-    return toast(message, {
-      ...toastConfig,
-      ...options,
-    });
-  },
-
-  dismiss: (toastId) => {
-    toast.dismiss(toastId);
-  },
-
-  dismissAll: () => {
-    toast.dismiss();
-  },
-};
-*/
 
 export const showToast = {
   success: (message) => console.log('✅ Success:', message),
@@ -111,32 +45,12 @@ export const showToast = {
   dismissAll: () => {},
 };
 
-/**
- * Componente ToastContainer
- * Adicione no layout principal
- */
 export const ToastContainer = () => {
-  // Descomentar após instalar
-  /*
-  return (
-    <Toaster
-      position={toastConfig.position}
-      reverseOrder={false}
-      gutter={8}
-      toastOptions={{
-        className: 'dark:bg-dark-800 dark:text-white',
-        style: toastConfig.style,
-      }}
-    />
-  );
-  */
   
-  return null; // Mock temporário
+  
+  return null; 
 };
 
-/**
- * Hook customizado para toast
- */
 export const useToast = () => {
   return showToast;
 };

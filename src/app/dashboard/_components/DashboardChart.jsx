@@ -10,12 +10,12 @@ export default function DashboardChart({ data, type = 'bar', showPie = false }) 
     );
   }
 
-  // Se quiser exibir gráfico de pizza
+  
   if (showPie) {
     return <PieChart data={data} />;
   }
 
-  // Preparar dados para o BarChart
+  
   const chartData = data.categories.map(cat => ({
     category: cat.category,
     label: cat.category,

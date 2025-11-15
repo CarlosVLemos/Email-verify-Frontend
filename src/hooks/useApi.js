@@ -1,25 +1,12 @@
-/**
- * Custom hook para chamadas de API
- */
 
 import { useState, useCallback } from 'react';
 import { ERROR_MESSAGES } from '@/lib/constants';
 
-/**
- * Hook para gerenciar estado de chamadas de API
- * @param {Function} apiFunction - Função que faz a chamada à API
- * @returns {Object} - { data, loading, error, execute, reset }
- */
 export const useApi = (apiFunction) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  /**
-   * Executa a chamada à API
-   * @param {...any} params - Parâmetros para a função da API
-   * @returns {Promise} - Promise com os dados ou erro
-   */
   const execute = useCallback(async (...params) => {
     try {
       setLoading(true);
@@ -32,7 +19,7 @@ export const useApi = (apiFunction) => {
     } catch (err) {
       console.error('API Error:', err);
       
-      // Tratamento de erros por status HTTP
+      
       let errorMessage = ERROR_MESSAGES.GENERIC;
       
       if (err.response) {
@@ -63,9 +50,6 @@ export const useApi = (apiFunction) => {
     }
   }, [apiFunction]);
 
-  /**
-   * Reseta o estado do hook
-   */
   const reset = useCallback(() => {
     setData(null);
     setError(null);
@@ -81,12 +65,6 @@ export const useApi = (apiFunction) => {
   };
 };
 
-/**
- * Hook para chamadas de API com retry automático
- * @param {Function} apiFunction - Função que faz a chamada à API
- * @param {Object} options - Opções de configuração
- * @returns {Object} - { data, loading, error, execute, reset, retry }
- */
 export const useApiWithRetry = (apiFunction, options = {}) => {
   const { maxRetries = 3, retryDelay = 1000 } = options;
   const [retryCount, setRetryCount] = useState(0);
@@ -107,7 +85,7 @@ export const useApiWithRetry = (apiFunction, options = {}) => {
       setRetryCount(attempt);
       
       if (attempt < maxRetries) {
-        // Aguarda antes de tentar novamente
+        
         await new Promise(resolve => setTimeout(resolve, retryDelay * attempt));
       }
     }
@@ -128,11 +106,6 @@ export const useApiWithRetry = (apiFunction, options = {}) => {
   };
 };
 
-/**
- * Hook para múltiplas chamadas de API em paralelo
- * @param {Array<Function>} apiFunctions - Array de funções de API
- * @returns {Object} - { data, loading, error, execute, reset }
- */
 export const useParallelApi = (apiFunctions) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);

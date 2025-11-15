@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { summarizeEmail } from '@/services/emailService';
+import { summarizeEmail, generateHuggingFaceResponse } from '@/services/emailService';
+import { useApi } from '@/hooks/useApi';
 import { CATEGORY_CONFIG, TONE_CONFIG, URGENCY_CONFIG } from '@/lib/constants';
 import { formatPercentage } from '@/utils/formatters';
 import { validateEmailText, FILE_CONSTRAINTS } from '@/utils/validators';
@@ -7,9 +8,21 @@ import { validateEmailText, FILE_CONSTRAINTS } from '@/utils/validators';
 const ResultCard = ({ result, emailText }) => {
   if (!result) return null;
 
-  const [summary, setSummary] = useState(null);
-  const [loadingSummary, setLoadingSummary] = useState(false);
-  const [summaryError, setSummaryError] = useState('');
+  const [hfTone, setHfTone] = useState('professional');
+
+  const {
+    data: summary,
+    loading: loadingSummary,
+    error: summaryError,
+    execute: executeSummary
+  } = useApi(summarizeEmail);
+
+  const {
+    data: hfResponse,
+    loading: loadingHfResponse,
+    error: hfResponseError,
+    execute: executeHfResponse
+  } = useApi(generateHuggingFaceResponse);
 
   const {
     topic,
@@ -26,69 +39,44 @@ const ResultCard = ({ result, emailText }) => {
     sender_name,
   } = result;
 
-  // Removido categoryConfig, toneConfig, urgencyConfig locais
+  
 
   const handleGenerateSummary = async () => {
     if (!emailText) {
-      setSummaryError('Texto do email não disponível para resumo');
       return;
     }
 
-    // Validação usando utility
     const validationError = validateEmailText(emailText);
     if (validationError) {
-      setSummaryError(validationError);
       return;
     }
 
-    setLoadingSummary(true);
-    setSummaryError('');
-
-    try {
-      let summaryData;
-      
-      // Verifica se emailText é um arquivo (File object) ou string
-      if (emailText instanceof File) {
-        // É um arquivo - cria FormData
-        const formData = new FormData();
-        formData.append('file', emailText);
-        summaryData = await summarizeEmail(formData, 3);
-      } else {
-        // É texto normal
-        summaryData = await summarizeEmail(emailText, 3);
-      }
-      
-      setSummary(summaryData);
-    } catch (error) {
-      console.error('Erro ao gerar resumo:', error);
-      
-      // Mensagem de erro mais detalhada
-      let errorMessage = 'Erro ao gerar resumo. ';
-      
-      if (error.response?.status === 400) {
-        const fieldErrors = error.response?.data?.field_errors;
-        
-        // Verifica se há erro específico de tamanho mínimo
-        if (fieldErrors?.email_text) {
-          errorMessage = fieldErrors.email_text[0] || 'Requisição inválida.';
-        } else {
-          errorMessage += 'Requisição inválida. Verifique o formato dos dados.';
-        }
-      } else if (error.response?.status === 500) {
-        errorMessage += 'Erro no servidor. Tente novamente mais tarde.';
-      } else {
-        errorMessage += 'Tente novamente.';
-      }
-      
-      setSummaryError(errorMessage);
-    } finally {
-      setLoadingSummary(false);
+    let summaryData;
+    if (emailText instanceof File) {
+      const formData = new FormData();
+      formData.append('file', emailText);
+      summaryData = await executeSummary(formData, 3);
+    } else {
+      summaryData = await executeSummary(emailText, 3);
     }
+  };
+
+  const handleGenerateHfResponse = async () => {
+    if (!emailText) {
+      return;
+    }
+
+    const validationError = validateEmailText(emailText);
+    if (validationError) {
+      return;
+    }
+
+    const context = `Este é um email classificado como ${category} com tom ${tone} e urgência ${urgency}.`;
+    await executeHfResponse(emailText, context, hfTone);
   };
 
   return (
     <div className="bg-white dark:bg-dark-800 rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden border border-gray-100 dark:border-dark-700 hover:shadow-3xl transition-all duration-300 sm:transform sm:hover:-translate-y-1">
-      {/* Header com Categoria */}
       <div className={`bg-gradient-to-r ${CATEGORY_CONFIG[category]?.gradient || 'from-gray-50 to-gray-100 dark:from-dark-900 dark:to-dark-800'} px-4 sm:px-6 py-3 sm:py-4 border-b-2 ${CATEGORY_CONFIG[category]?.color.split(' ')[2] || 'border-gray-200'}`}>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
           <div className="flex-1 min-w-0">
@@ -109,7 +97,7 @@ const ResultCard = ({ result, emailText }) => {
         </div>
       </div>
 
-      {/* Métricas Principais */}
+      {}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 p-4 sm:p-6 bg-gray-50 dark:bg-dark-900">
         <div className="bg-white dark:bg-dark-800 rounded-lg sm:rounded-xl p-3 sm:p-4 shadow-sm border border-gray-100 dark:border-dark-700">
           <div className="flex items-center justify-between">
@@ -141,7 +129,7 @@ const ResultCard = ({ result, emailText }) => {
         </div>
       </div>
 
-      {/* Remetente */}
+      {}
       {sender_email && (
         <div className="px-4 sm:px-6 py-3 sm:py-4 bg-primary-50 dark:bg-primary-900/20 border-t border-primary-100 dark:border-primary-800/30">
           <div className="flex items-center">
@@ -161,7 +149,7 @@ const ResultCard = ({ result, emailText }) => {
         </div>
       )}
 
-      {/* Resposta Sugerida */}
+      {}
       <div className="px-4 sm:px-6 py-4 sm:py-5 border-t border-gray-100 dark:border-dark-700">
         <div className="flex items-start">
           <div className="bg-purple-100 dark:bg-purple-900/30 p-2 rounded-lg mr-2 sm:mr-3 mt-1 flex-shrink-0">
@@ -180,7 +168,7 @@ const ResultCard = ({ result, emailText }) => {
         </div>
       </div>
 
-      {/* Resumo do Email */}
+      {}
       <div className="px-6 py-5 bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-cyan-900/20 dark:to-blue-900/20 border-t border-cyan-100 dark:border-cyan-800/30">
         <div className="flex items-start">
           <div className="bg-cyan-100 dark:bg-cyan-900/30 p-2 rounded-lg mr-3 mt-1">
@@ -190,7 +178,7 @@ const ResultCard = ({ result, emailText }) => {
           </div>
           <div className="flex-1">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-sm text-cyan-600 dark:text-cyan-300 uppercase tracking-wide font-semibold">
+              <p className="text-sm text-cyan-600 dark:text-cyan-900 uppercase tracking-wide font-semibold">
                 📄 Resumo Executivo
               </p>
               {!summary && (
@@ -202,7 +190,7 @@ const ResultCard = ({ result, emailText }) => {
                 >
                   {loadingSummary ? (
                     <>
-                      <svg className="animate-spin -ml-1 mr-2 h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <svg className="animate-spin -ml-1 mr-2 h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
@@ -297,7 +285,115 @@ const ResultCard = ({ result, emailText }) => {
         </div>
       </div>
 
-      {/* Análise de Anexos */}
+      {}
+      <div className="px-6 py-5 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-t border-purple-100 dark:border-purple-800/30">
+        <div className="flex items-start">
+          <div className="bg-purple-100 dark:bg-purple-900/30 p-2 rounded-lg mr-3 mt-1">
+            <svg className="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-sm text-purple-600 dark:text-purple-800 uppercase tracking-wide font-semibold">
+                🤖 Resposta com IA (Hugging Face)
+              </p>
+              {!hfResponse && (
+                <div className="flex items-center gap-2">
+                  <select
+                    value={hfTone}
+                    onChange={(e) => setHfTone(e.target.value)}
+                    className="px-2 py-1 text-xs bg-white dark:bg-dark-800 border border-purple-200 dark:border-purple-800/30 rounded-md text-gray-700 dark:text-gray-300"
+                  >
+                    <option value="professional">Profissional</option>
+                    <option value="friendly">Amigável</option>
+                    <option value="formal">Formal</option>
+                    <option value="casual">Casual</option>
+                  </select>
+                  <button
+                    onClick={handleGenerateHfResponse}
+                    disabled={loadingHfResponse || (typeof emailText === 'string' && emailText.length < FILE_CONSTRAINTS.MIN_TEXT_LENGTH)}
+                    className="px-4 py-1.5 bg-purple-600 dark:bg-purple-700 hover:bg-purple-700 dark:hover:bg-purple-600 disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed text-white text-xs font-semibold rounded-lg transition-all duration-200 flex items-center"
+                    title={typeof emailText === 'string' && emailText.length < FILE_CONSTRAINTS.MIN_TEXT_LENGTH ? `Texto muito curto (mínimo ${FILE_CONSTRAINTS.MIN_TEXT_LENGTH} caracteres)` : 'Gerar resposta com IA'}
+                  >
+                    {loadingHfResponse ? (
+                      <>
+                        <svg className="animate-spin -ml-1 mr-2 h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Gerando...
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                        Gerar Resposta
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {hfResponseError && (
+              <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800/30 text-red-700 dark:text-red-300 px-4 py-2 rounded-lg text-sm">
+                {hfResponseError}
+              </div>
+            )}
+
+            {hfResponse ? (
+              <div className="space-y-3">
+                <div className="bg-white dark:bg-dark-800 p-4 rounded-xl border border-purple-200 dark:border-purple-800/30">
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-xs text-purple-600 dark:text-purple-400 font-semibold">Resposta Gerada ({hfTone})</p>
+                    <button
+                      onClick={() => navigator.clipboard.writeText(hfResponse.generated_response)}
+                      className="text-xs text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-medium flex items-center"
+                      title="Copiar resposta"
+                    >
+                      <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                      Copiar
+                    </button>
+                  </div>
+                  <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
+                    {hfResponse.generated_response}
+                  </p>
+                </div>
+                <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                  <span>💡 Resposta gerada por IA baseada no contexto do email</span>
+                  {hfResponse.fallback && (
+                    <span className="text-amber-600 dark:text-amber-400 font-medium">
+                      🔄 Modo offline
+                    </span>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div>
+                {!emailText ? (
+                  <p className="text-sm text-gray-600 dark:text-gray-800 italic">
+                    Resposta IA não disponível (email enviado sem texto/arquivo).
+                  </p>
+                ) : typeof emailText === 'string' && emailText.length < FILE_CONSTRAINTS.MIN_TEXT_LENGTH ? (
+                  <div className="bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800/30 px-4 py-3 rounded-lg text-sm">
+                    <p className="font-semibold mb-1 text-amber-700 dark:text-amber-300">⚠️ Texto muito curto</p>
+                    <p className="text-amber-700 dark:text-amber-300">Para gerar uma resposta útil, o texto deve ter pelo menos {FILE_CONSTRAINTS.MIN_TEXT_LENGTH} caracteres. Atualmente: {emailText.length} caracteres.</p>
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-600 dark:text-gray-400 italic">
+                    Clique no botão acima para gerar uma resposta automática com IA.
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
       {attachment_analysis && (
         <div className="px-6 py-5 bg-gray-50 dark:bg-dark-900 border-t border-gray-100 dark:border-dark-700">
           <div className="flex items-start">
@@ -342,7 +438,6 @@ const ResultCard = ({ result, emailText }) => {
         </div>
       )}
 
-      {/* Footer com Estatísticas */}
       <div className="px-6 py-3 bg-gray-100 dark:bg-dark-900 border-t border-gray-200 dark:border-dark-700">
         <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
           <span>📊 {char_count} caracteres analisados</span>

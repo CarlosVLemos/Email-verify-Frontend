@@ -1,17 +1,8 @@
-/**
- * Custom hook para gerenciar localStorage
- */
 
 import { useState, useEffect, useCallback } from 'react';
 
-/**
- * Hook para persistir estado no localStorage
- * @param {string} key - Chave do localStorage
- * @param {any} initialValue - Valor inicial
- * @returns {[any, Function, Function]} - [value, setValue, removeValue]
- */
 export const useLocalStorage = (key, initialValue) => {
-  // Estado para armazenar o valor
+  
   const [storedValue, setStoredValue] = useState(() => {
     if (typeof window === 'undefined') {
       return initialValue;
@@ -26,10 +17,10 @@ export const useLocalStorage = (key, initialValue) => {
     }
   });
 
-  // Função para atualizar o valor
+  
   const setValue = useCallback((value) => {
     try {
-      // Permite que value seja uma função (como setState)
+      
       const valueToStore = value instanceof Function ? value(storedValue) : value;
       
       setStoredValue(valueToStore);
@@ -42,7 +33,7 @@ export const useLocalStorage = (key, initialValue) => {
     }
   }, [key, storedValue]);
 
-  // Função para remover o valor
+  
   const removeValue = useCallback(() => {
     try {
       setStoredValue(initialValue);
@@ -58,12 +49,6 @@ export const useLocalStorage = (key, initialValue) => {
   return [storedValue, setValue, removeValue];
 };
 
-/**
- * Hook para sincronizar estado entre abas
- * @param {string} key - Chave do localStorage
- * @param {any} initialValue - Valor inicial
- * @returns {[any, Function]} - [value, setValue]
- */
 export const useSyncedLocalStorage = (key, initialValue) => {
   const [storedValue, setStoredValue, removeValue] = useLocalStorage(key, initialValue);
 
@@ -78,7 +63,7 @@ export const useSyncedLocalStorage = (key, initialValue) => {
       }
     };
 
-    // Escuta mudanças no localStorage de outras abas
+    
     window.addEventListener('storage', handleStorageChange);
     
     return () => {
@@ -89,13 +74,6 @@ export const useSyncedLocalStorage = (key, initialValue) => {
   return [storedValue, setStoredValue, removeValue];
 };
 
-/**
- * Hook para localStorage com expiração
- * @param {string} key - Chave do localStorage
- * @param {any} initialValue - Valor inicial
- * @param {number} expirationMs - Tempo de expiração em milissegundos
- * @returns {[any, Function, Function]} - [value, setValue, removeValue]
- */
 export const useLocalStorageWithExpiry = (key, initialValue, expirationMs) => {
   const [storedValue, setStoredValue] = useState(() => {
     if (typeof window === 'undefined') {
@@ -108,7 +86,7 @@ export const useLocalStorageWithExpiry = (key, initialValue, expirationMs) => {
 
       const { value, expiry } = JSON.parse(item);
       
-      // Verifica se expirou
+      
       if (expiry && Date.now() > expiry) {
         window.localStorage.removeItem(key);
         return initialValue;

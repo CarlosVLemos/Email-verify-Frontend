@@ -1,7 +1,3 @@
-/**
- * Gráfico de Pizza Interativo
- * Versão CSS pura (sem bibliotecas) com animações
- */
 
 'use client';
 
@@ -21,7 +17,7 @@ const PieChart = ({ data, title }) => {
 
   const total = data.categories.reduce((sum, item) => sum + item.count, 0);
   
-  // Calcular ângulos para cada fatia
+  
   let currentAngle = 0;
   const slices = data.categories.map((item, index) => {
     const percentage = (item.count / total) * 100;
@@ -39,14 +35,14 @@ const PieChart = ({ data, title }) => {
     };
   });
 
-  // Criar path SVG para cada fatia
+  
   const createSlicePath = (startAngle, endAngle, radius = 100, innerRadius = 0) => {
     const start = polarToCartesian(150, 150, radius, endAngle);
     const end = polarToCartesian(150, 150, radius, startAngle);
     const largeArc = endAngle - startAngle <= 180 ? 0 : 1;
 
     if (innerRadius > 0) {
-      // Donut chart
+      
       const innerStart = polarToCartesian(150, 150, innerRadius, endAngle);
       const innerEnd = polarToCartesian(150, 150, innerRadius, startAngle);
       
@@ -82,7 +78,7 @@ const PieChart = ({ data, title }) => {
       )}
 
       <div className="flex flex-col lg:flex-row items-center gap-8">
-        {/* SVG Chart */}
+        {}
         <div className="relative">
           <svg width="300" height="300" viewBox="0 0 300 300" className="transform -rotate-90">
             {slices.map((slice, index) => (
@@ -103,7 +99,7 @@ const PieChart = ({ data, title }) => {
             ))}
           </svg>
           
-          {/* Centro do donut */}
+          {}
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
             <div className="text-3xl font-bold text-gray-900 dark:text-white">
               {total}
@@ -114,7 +110,7 @@ const PieChart = ({ data, title }) => {
           </div>
         </div>
 
-        {/* Legend */}
+        {}
         <div className="flex-1 space-y-3 w-full">
           {slices.map((slice, index) => (
             <div

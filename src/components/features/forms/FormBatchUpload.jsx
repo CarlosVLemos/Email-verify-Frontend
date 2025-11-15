@@ -50,7 +50,7 @@ const FormBatchUpload = ({ onSubmit }) => {
   const handleFiles = async (fileList) => {
     const fileArray = Array.from(fileList);
     
-    // Validar arquivos usando o utilitário
+    
     const validation = validateFiles(fileArray);
     
     if (!validation.valid) {
@@ -61,7 +61,7 @@ const FormBatchUpload = ({ onSubmit }) => {
     setError('');
     setFiles(fileArray);
 
-    // Gerar previews
+    
     const previewPromises = fileArray.map(file => generatePreview(file));
     const generatedPreviews = await Promise.all(previewPromises);
     setPreviews(generatedPreviews);
@@ -117,10 +117,10 @@ const FormBatchUpload = ({ onSubmit }) => {
       const result = await processBatchEmails(emails);
       onSubmit(result.results, emails);
       
-      // Toast de sucesso
+      
       showToast.success(`${files.length} ${files.length === 1 ? 'email processado' : 'emails processados'} com sucesso! 🎉`);
       
-      // Limpar após sucesso
+      
       setFiles([]);
       setPreviews([]);
       if (fileInputRef.current) {
@@ -138,7 +138,7 @@ const FormBatchUpload = ({ onSubmit }) => {
 
   return (
     <div className="space-y-6">
-      {/* Drag & Drop Area */}
+      {}
       <div
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -194,7 +194,7 @@ const FormBatchUpload = ({ onSubmit }) => {
         </label>
       </div>
 
-      {/* Error Message */}
+      {}
       {error && (
         <div className="bg-red-50 dark:bg-red-900/30 border-2 border-red-200 dark:border-red-800/30 rounded-xl p-4">
           <div className="flex items-start">
@@ -209,7 +209,7 @@ const FormBatchUpload = ({ onSubmit }) => {
         </div>
       )}
 
-      {/* File Previews */}
+      {}
       {previews.length > 0 && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
@@ -262,7 +262,7 @@ const FormBatchUpload = ({ onSubmit }) => {
                   </button>
                 </div>
 
-                {/* Preview Content */}
+                {}
                 <div className="bg-gray-50 dark:bg-dark-900 rounded-lg p-3 border border-gray-200 dark:border-dark-700">
                   <p className="text-xs text-gray-600 dark:text-gray-300 font-mono leading-relaxed whitespace-pre-wrap break-words">
                     {preview.preview}
@@ -274,7 +274,7 @@ const FormBatchUpload = ({ onSubmit }) => {
         </div>
       )}
 
-      {/* Submit Button */}
+      {}
       <button
         type="submit"
         onClick={handleSubmit}
@@ -283,7 +283,7 @@ const FormBatchUpload = ({ onSubmit }) => {
       >
         {loading ? (
           <>
-            <svg className="animate-spin -ml-1 mr-3 h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <svg className="animate-spin -ml-1 mr-3 h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
@@ -299,7 +299,7 @@ const FormBatchUpload = ({ onSubmit }) => {
         )}
       </button>
 
-      {/* Info Box */}
+      {}
       <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800/30 rounded-xl p-4">
         <div className="flex items-start">
           <svg className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
