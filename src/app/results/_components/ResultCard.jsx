@@ -220,8 +220,8 @@ const ResultCard = ({ result, emailText }) => {
                   <p className="text-xs text-cyan-600 dark:text-cyan-400 font-semibold mb-2">Resumo:</p>
                   <ul className="space-y-2">
                     {summary.summary.map((sentence, index) => (
-                      <li key={index} className="text-sm text-gray-700 dark:text-gray-300 flex items-start">
-                        <span className="text-cyan-600 dark:text-cyan-400 mr-2 font-bold">•</span>
+                      <li key={index} className="text-sm text-gray-700 dark:text-gray-800 flex items-start">
+                        <span className="text-cyan-600 dark:text-cyan-800 mr-2 font-bold">•</span>
                         <span>{sentence}</span>
                       </li>
                     ))}
@@ -272,7 +272,7 @@ const ResultCard = ({ result, emailText }) => {
                 ) : typeof emailText === 'string' && emailText.length < FILE_CONSTRAINTS.MIN_TEXT_LENGTH ? (
                   <div className="bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800/30 px-4 py-3 rounded-lg text-sm">
                     <p className="font-semibold mb-1 text-amber-700 dark:text-amber-300">⚠️ Texto muito curto</p>
-                    <p className="text-amber-700 dark:text-amber-300">Para gerar um resumo útil, o texto deve ter pelo menos {FILE_CONSTRAINTS.MIN_TEXT_LENGTH} caracteres. Atualmente: {emailText.length} caracteres.</p>
+                    <p className="text-amber-700 dark:text-amber-800">Para gerar um resumo útil, o texto deve ter pelo menos {FILE_CONSTRAINTS.MIN_TEXT_LENGTH} caracteres. Atualmente: {emailText.length} caracteres.</p>
                   </div>
                 ) : (
                   <p className="text-sm text-gray-600 dark:text-gray-400 italic">
@@ -363,7 +363,7 @@ const ResultCard = ({ result, emailText }) => {
                     {hfResponse.generated_response}
                   </p>
                 </div>
-                <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-800">
                   <span>💡 Resposta gerada por IA baseada no contexto do email</span>
                   {hfResponse.fallback && (
                     <span className="text-amber-600 dark:text-amber-400 font-medium">
@@ -379,12 +379,12 @@ const ResultCard = ({ result, emailText }) => {
                     Resposta IA não disponível (email enviado sem texto/arquivo).
                   </p>
                 ) : typeof emailText === 'string' && emailText.length < FILE_CONSTRAINTS.MIN_TEXT_LENGTH ? (
-                  <div className="bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800/30 px-4 py-3 rounded-lg text-sm">
-                    <p className="font-semibold mb-1 text-amber-700 dark:text-amber-300">⚠️ Texto muito curto</p>
-                    <p className="text-amber-700 dark:text-amber-300">Para gerar uma resposta útil, o texto deve ter pelo menos {FILE_CONSTRAINTS.MIN_TEXT_LENGTH} caracteres. Atualmente: {emailText.length} caracteres.</p>
+                  <div className="bg-amber-50 dark:bg-amber-900/30 border border-amber-800 dark:border-amber-800/30 px-4 py-3 rounded-lg text-sm">
+                    <p className="font-semibold mb-1 text-amber-700 dark:text-amber-800">⚠️ Texto muito curto</p>
+                    <p className="text-amber-700 dark:text-amber-800">Para gerar uma resposta útil, o texto deve ter pelo menos {FILE_CONSTRAINTS.MIN_TEXT_LENGTH} caracteres. Atualmente: {emailText.length} caracteres.</p>
                   </div>
                 ) : (
-                  <p className="text-sm text-gray-600 dark:text-gray-400 italic">
+                  <p className="text-sm text-gray-600 dark:text-gray-800 italic">
                     Clique no botão acima para gerar uma resposta automática com IA.
                   </p>
                 )}

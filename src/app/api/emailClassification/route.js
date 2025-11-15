@@ -1,4 +1,12 @@
-import axiosInstance from '../axiosInstance';
+import axios from 'axios';
+
+const backendAxios = axios.create({
+  baseURL: 'http://localhost:8000',
+  timeout: 120000,
+  headers: {
+    'x-api-key': process.env.NEXT_PUBLIC_API_KEY,
+  },
+});
 
 export const classifyEmail = async (emailTextOrFormData, senderEmail = null, senderName = null) => {
   try {
@@ -13,7 +21,7 @@ export const classifyEmail = async (emailTextOrFormData, senderEmail = null, sen
       if (senderName) payload.sender_name = senderName;
     }
 
-    const response = await axiosInstance.post('/api/classifier/classify/', payload);
+    const response = await backendAxios.post('/api/classifier/classify/', payload);
     return response.data;
   } catch (error) {
     console.error('Error classifying email:', error);
@@ -48,7 +56,7 @@ export const summarizeEmail = async (emailTextOrFormData, maxSentences = 3) => {
       });
     }
 
-    const response = await axiosInstance.post('/api/classifier/summary/', payload);
+    const response = await backendAxios.post('/api/classifier/summary/', payload);
     return response.data;
   } catch (error) {
     console.error('Error summarizing email:', error);
@@ -60,7 +68,7 @@ export const summarizeEmail = async (emailTextOrFormData, maxSentences = 3) => {
 
 export const processBatchEmails = async (emails) => {
   try {
-    const response = await axiosInstance.post('/api/classifier/batch/', {
+    const response = await backendAxios.post('/api/classifier/batch/', {
       emails,
     });
     return response.data;

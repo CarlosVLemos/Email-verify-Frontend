@@ -1,14 +1,23 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000',
+  baseURL: '',
   timeout: parseInt(process.env.NEXT_PUBLIC_API_TIMEOUT) || 120000,
   headers: {
-    // Header da API key removido temporariamente para evitar erro CORS
-    // TODO: Re-adicionar quando o backend estiver configurado para aceitar o header
+    'x-api-key': process.env.NEXT_PUBLIC_API_KEY,
   },
   // Removido withCredentials temporariamente para evitar problemas CORS
   // withCredentials: true,
+});
+
+axiosInstance.interceptors.request.use((config) => {
+  console.log('Debugging Axios Base URL:', {
+    baseURL: config.baseURL,
+    url: config.url,
+    fullURL: `${config.baseURL}${config.url}`,
+    headers: config.headers,
+  });
+  return config;
 });
 
 axiosInstance.interceptors.request.use((config) => {
